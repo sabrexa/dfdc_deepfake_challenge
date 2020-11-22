@@ -1,6 +1,10 @@
+# allow you to write a command line interface for your scripts. https://realpython.com/command-line-interfaces-python-argparse/
 import argparse
+# provides functions for interacting with the operating system
 import os
+#contains a variety of things to do with random number generation
 import random
+#
 import subprocess
 
 os.environ["MKL_NUM_THREADS"] = "1"
