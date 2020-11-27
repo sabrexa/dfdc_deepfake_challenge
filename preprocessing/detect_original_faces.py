@@ -14,7 +14,7 @@ from preprocessing.utils import get_original_video_paths
 
 def parse_args():
      """
-    This function, which specifies 2 command-line options, processes videos with Face detector.
+    This function, which specifies 2 command-line options,
     """
     #ArgumentParser object will hold all the information necessary to parse the command line into Python data types
     parser = argparse.ArgumentParser(
