@@ -2,14 +2,22 @@ import random
 
 import cv2
 import numpy as np
+#library for image augmentation
+#Image augmentation is used in deep learning and computer vision tasks to increase the quality of trained models
+# DualTransform - Transform for segmentation task
+#ImageOnlyTransform - Transform applied to image only
 from albumentations import DualTransform, ImageOnlyTransform
 from albumentations.augmentations.functional import crop
 
 
+#INTER_AREA – resampling using pixel area relation
+#INTER_CUBIC - a bicubic interpolation over 4×4 pixel neighborhood
 def isotropically_resize_image(img, size, interpolation_down=cv2.INTER_AREA, interpolation_up=cv2.INTER_CUBIC):
+    # initialize the height and width of the image based on its shape
     h, w = img.shape[:2]
     if max(w, h) == size:
         return img
+    # check if width is greater than height then scale up the height
     if w > h:
         scale = size / w
         h = h * scale
@@ -23,6 +31,8 @@ def isotropically_resize_image(img, size, interpolation_down=cv2.INTER_AREA, int
     return resized
 
 
+
+#Isotropic scaling is a linear transformation that enlarges (increases) or shrinks (diminishes) objects by a scale factor that is the same in all directions
 class IsotropicResize(DualTransform):
     def __init__(self, max_side, interpolation_down=cv2.INTER_AREA, interpolation_up=cv2.INTER_CUBIC,
                  always_apply=False, p=1):
