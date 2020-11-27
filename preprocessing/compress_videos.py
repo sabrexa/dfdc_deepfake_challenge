@@ -43,27 +43,39 @@ from tqdm import tqdm
 
 
 def compress_video(video, root_dir):
+    """
+    This function gets, for a given video, the directory that contains the video, compress them and saves them in the compressed directory
+    """
+    #splits the path and get the parent directory name
     parent_dir = video.split("/")[-2]
+    #Join various path components 
     out_dir = os.path.join(root_dir, "compressed", parent_dir)
+    #creates all the intermediate directories if they don't exist
     os.makedirs(out_dir, exist_ok=True)
+    #get the name of the video from the path
     video_name = video.split("/")[-1]
     out_path = os.path.join(out_dir, video_name)
     lvl = random.choice([23, 28, 32])
     command = "ffmpeg -i {} -c:v libx264 -crf {} -threads 1 {}".format(video, lvl, out_path)
     try:
+        #check_output raises an exception if it receives non-zero exit status
         subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
     except Exception as e:
         print("Could not process vide", str(e))
 
 
 if __name__ == '__main__':
+    
+    #ArgumentParser object will hold all the information necessary to parse the command line into Python data types
     parser = argparse.ArgumentParser(
         description="Extracts jpegs from video")
     parser.add_argument("--root-dir", help="root directory", default="/mnt/sota/datasets/deepfake")
-
+     #parse the standard arguments passed to the script
     args = parser.parse_args()
     videos = [video_path for video_path in glob(os.path.join(args.root_dir, "*/*.mp4"))]
+    #Pool allows to  parallelize the execution of a function across multiple input values
     with Pool(processes=cpu_count() - 2) as p:
+        #Keeping track with a progress bar
         with tqdm(total=len(videos)) as pbar:
             # imap_unordered: this method chops the iterable into a number of chunks which it submits to the process pool as separate tasks.
             # the ordering of the results from the returned iterator are considered arbitrary
